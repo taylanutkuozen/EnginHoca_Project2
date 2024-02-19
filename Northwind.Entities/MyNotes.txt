@@ -1,0 +1,11 @@
+﻿Entities katmanına abstract ve concrete adlı iki klasör oluştururuz.Business ve DataAccess katmanlarına aynı klasörleri kopyalarız.
+Abstract içerisine soyut nesnelerimizi bir interface,abstract class, inheritance gibi çalışmalar yapılır.
+Önce entities katmanında Product class'ı oluşturuldu.(Concrete klasörü içerisinde)
+DataAccess concrete içerisinde select,insert,update,delete işlemlerinin methodları tanımlandı.
+Aynı zamanda Db bağlanması tablo ile class yapısını match edebilmek için Context class'ı tanımlandı.
+Business katmanında işlemler yapacağız. Concrete katmanında ProductManager adında bir class oluşturduk.
+Hangi tür ORM kullanıyorsak onun için Data Access Concrete içerisine bir klasör ekliyoruz.
+-----
+Önce Entity mizi(örneğin Category) yazıyoruz. Sonra Northwind Context(veya hangi context ise oraya) ve bir tane temel mapping'i entity için yapıyor.Daha sonra Abstract(DataAccess) gitti bu entity için bir interface hazırladı(ICategoryDal) ve IEntityRepository<Category(entity_class)> implemente etti. Daha sonra Data Access Entity Framework klasörüne bir EfCategoryDal class'ı oluşturduk ve bu class'ı EfEntityRepositoryBase<Entity,Context> ile inheritance ederiz.
+-----
+Form üzerinde kategoriye eleman eklemek için önce kategori class'ına veritabanındaki tablodan kolon karşılıklarını property olarak yazıyoruz ve IEntity'den implemente ediyoruz. 2.aşamada DataAccess'te ICategoryDal'ı IEntityRepository'den implemente ediyoruz. Önce northwind context'e Kategori ile ilgili mapper ekledikten sonra EntityFramework içerisinde EfCategoryDal için EntityRepositoryBase<Category,NorthwindContext>,ICategoryDal inheritance yapıyoruz. Bunları yaptıktan sonra iş katmanına gidip abstract dosyasına ICategoryService adında bir interface ekliyoruz. interface içerisinde metot adını yazıyoruz ancak gövdesini yazmıyoruz. Concrete içerisine girip CategoryManager adında bir class ekliyoruz. Bu class'ı ICategoryService ile implement ediyoruz. sonrasında bir ICategoryDal nesnesine ihtiyacımız var. ve sonrasında constructor ile ICategoryDal nesnesi için bir başlangıç değeri gönderiyoruz. implement edilen metot gövdesine return ^ICategoryDal nesnesi.ICategoryService_metot_ismi^ yazıyoruz. Daha sonra Form.cs içerisinde LoadCategories adında bir metot oluşturduk. FormLoad altına bir ICategoryService nesnesi oluşturuyoruz.
